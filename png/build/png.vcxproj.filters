@@ -20,5 +20,11 @@
     <ClInclude Include="..\MakePNG.h">
       <Filter>..</Filter>
     </ClInclude>
+    <ClInclude Include="..\encoder.h">
+      <Filter>..</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common.h">
+      <Filter>..</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,10 +1,10 @@
 prefix=@prefix@
 exec_prefix=@exec_prefix@
 libdir=@libdir@
-includedir=@includedir@/libpng17
+includedir=@includedir@/libpng16
 
 Name: libpng
 Description: Loads and saves PNG files
-Version: 1.7.0beta42
-Libs: -L${libdir} -lpng17
+Version: 1.6.15
+Libs: -L${libdir} -lpng16
 Cflags: -I${includedir}

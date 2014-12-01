@@ -10,8 +10,8 @@
 # and license in png.h
 
 # Library name:
-LIBNAME = libpng17
-PNGMAJ = 17
+LIBNAME = libpng16
+PNGMAJ = 16
 
 # Shared library names:
 LIBSO=$(LIBNAME).so
@@ -40,7 +40,7 @@ ZLIBINC=../zlib
 
 CPPFLAGS=-I$(ZLIBINC)
 CFLAGS= -dy -belf -O3
-LDFLAGS=-L. -L$(ZLIBLIB) -lpng17 -lz -lm
+LDFLAGS=-L. -L$(ZLIBLIB) -lpng16 -lz -lm
 
 INCPATH=$(prefix)/include
 LIBPATH=$(exec_prefix)/lib
@@ -94,7 +94,7 @@ libpng.pc:
 	-e s!@exec_prefix@!$(exec_prefix)! \
 	-e s!@libdir@!$(LIBPATH)! \
 	-e s!@includedir@!$(INCPATH)! \
-	-e s!-lpng17!-lpng17\ -lz\ -lm! > libpng.pc
+	-e s!-lpng16!-lpng16\ -lz\ -lm! > libpng.pc
 
 libpng-config:
 	( cat scripts/libpng-config-head.in; \
@@ -102,7 +102,7 @@ libpng-config:
 	echo I_opts=\"-I$(INCPATH)/$(LIBNAME)\"; \
 	echo ccopts=\"-belf\"; \
 	echo L_opts=\"-L$(LIBPATH)\"; \
-	echo libs=\"-lpng17 -lz -lm\"; \
+	echo libs=\"-lpng16 -lz -lm\"; \
 	cat scripts/libpng-config-body.in ) > libpng-config
 	chmod +x libpng-config
 

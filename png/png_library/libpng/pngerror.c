@@ -1,7 +1,7 @@
 
 /* pngerror.c - stub functions for i/o and memory allocation
  *
- * Last changed in libpng 1.7.0 [(PENDING RELEASE)]
+ * Last changed in libpng 1.6.15 [November 20, 2014]
  * Copyright (c) 1998-2014 Glenn Randers-Pehrson
  * (Version 0.96 Copyright (c) 1996, 1997 Andreas Dilger)
  * (Version 0.88 Copyright (c) 1995, 1996 Guy Eric Schalnat, Group 42, Inc.)
@@ -567,13 +567,7 @@ png_chunk_report(png_const_structrp png_ptr, png_const_charp message, int error)
 }
 
 #ifdef PNG_ERROR_TEXT_SUPPORTED
-
-#if defined(PNG_FLOATING_POINT_SUPPORTED) && \
-   (defined(PNG_gAMA_SUPPORTED) || defined(PNG_cHRM_SUPPORTED) || \
-   defined(PNG_sCAL_SUPPORTED) || defined(PNG_READ_BACKGROUND_SUPPORTED) || \
-   defined(PNG_READ_RGB_TO_GRAY_SUPPORTED)) || \
-   (defined(PNG_FLOATING_ARITHMETIC_SUPPORTED) &&\
-   defined(PNG_sCAL_SUPPORTED))
+#ifdef PNG_FLOATING_POINT_SUPPORTED
 PNG_FUNCTION(void,
 png_fixed_error,(png_const_structrp png_ptr, png_const_charp name),PNG_NORETURN)
 {
@@ -776,13 +770,9 @@ png_longjmp,(png_const_structrp png_ptr, int val),PNG_NORETURN)
     * choice is to terminate the whole process (or maybe the thread); to do
     * this the ANSI-C abort() function is used unless a different method is 
     * implemented by overriding the default configuration setting for
-    * PNG_ABORT (see scripts/pnglibconf.dfa).
-    *
-    * API change: prior to 1.7.0 PNG_ABORT was invoked as a function type macro
-    * with no arguments 'PNG_ABORT();', in 1.7.0 this is changed to a simple
-    * macro that is defined in the configuration.
+    * PNG_ABORT().
     */
-   PNG_ABORT
+   PNG_ABORT();
 }
 
 #ifdef PNG_WARNINGS_SUPPORTED

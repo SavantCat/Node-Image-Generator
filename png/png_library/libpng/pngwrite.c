@@ -1,7 +1,7 @@
 
 /* pngwrite.c - general routines to write a PNG file
  *
- * Last changed in libpng 1.7.0 [(PENDING RELEASE)]
+ * Last changed in libpng 1.6.15 [November 20, 2014]
  * Copyright (c) 1998-2014 Glenn Randers-Pehrson
  * (Version 0.96 Copyright (c) 1996, 1997 Andreas Dilger)
  * (Version 0.88 Copyright (c) 1995, 1996 Guy Eric Schalnat, Group 42, Inc.)
@@ -216,13 +216,8 @@ png_write_info(png_structrp png_ptr, png_const_inforp info_ptr)
       if ((png_ptr->transformations & PNG_INVERT_ALPHA) != 0 &&
           info_ptr->color_type == PNG_COLOR_TYPE_PALETTE)
       {
-         int j, jend;
-
-         jend = info_ptr->num_trans;
-         if (jend > PNG_MAX_PALETTE_LENGTH)
-            jend = PNG_MAX_PALETTE_LENGTH;
-
-         for (j = 0; j<jend; ++j)
+         int j;
+         for (j = 0; j<(int)info_ptr->num_trans; j++)
             info_ptr->trans_alpha[j] =
                (png_byte)(255 - info_ptr->trans_alpha[j]);
       }
@@ -440,6 +435,7 @@ png_write_end(png_structrp png_ptr, png_inforp info_ptr)
 
    /* Write end of PNG file */
    png_write_IEND(png_ptr);
+
    /* This flush, added in libpng-1.0.8, removed from libpng-1.0.9beta03,
     * and restored again in libpng-1.2.30, may cause some applications that
     * do not set png_ptr->output_flush_fn to crash.  If your application
@@ -487,7 +483,7 @@ png_create_write_struct,(png_const_charp user_png_ver, png_voidp error_ptr,
 {
 #ifndef PNG_USER_MEM_SUPPORTED
    png_structrp png_ptr = png_create_png_struct(user_png_ver, error_ptr,
-      error_fn, warn_fn, NULL, NULL, NULL);
+       error_fn, warn_fn, NULL, NULL, NULL);
 #else
    return png_create_write_struct_2(user_png_ver, error_ptr, error_fn,
        warn_fn, NULL, NULL, NULL);
@@ -500,9 +496,8 @@ png_create_write_struct_2,(png_const_charp user_png_ver, png_voidp error_ptr,
     png_malloc_ptr malloc_fn, png_free_ptr free_fn),PNG_ALLOCATED)
 {
    png_structrp png_ptr = png_create_png_struct(user_png_ver, error_ptr,
-      error_fn, warn_fn, mem_ptr, malloc_fn, free_fn);
+       error_fn, warn_fn, mem_ptr, malloc_fn, free_fn);
 #endif /* USER_MEM */
-
    if (png_ptr != NULL)
    {
       /* Set the zlib control values to defaults; they can be overridden by the
@@ -534,17 +529,17 @@ png_create_write_struct_2,(png_const_charp user_png_ver, png_voidp error_ptr,
        * applications that must not fail to write at all costs!
        */
 #ifdef PNG_BENIGN_WRITE_ERRORS_SUPPORTED
-      png_ptr->flags |= PNG_FLAG_BENIGN_ERRORS_WARN;
       /* In stable builds only warn if an application error can be completely
        * handled.
        */
+      png_ptr->flags |= PNG_FLAG_BENIGN_ERRORS_WARN;
 #endif
 
       /* App warnings are warnings in release (or release candidate) builds but
        * are errors during development.
        */
 #if PNG_LIBPNG_BUILD_BASE_TYPE >= PNG_LIBPNG_BUILD_RC
-         png_ptr->flags |= PNG_FLAG_APP_WARNINGS_WARN;
+      png_ptr->flags |= PNG_FLAG_APP_WARNINGS_WARN;
 #endif
 
       /* TODO: delay this, it can be done in png_init_io() (if the app doesn't
@@ -1013,52 +1008,42 @@ png_set_filter(png_structrp png_ptr, int method, int filters)
    if ((png_ptr->mng_features_permitted & PNG_FLAG_MNG_FILTER_64) != 0 &&
        (method == PNG_INTRAPIXEL_DIFFERENCING))
       method = PNG_FILTER_TYPE_BASE;
+
 #endif
-
-   /* The only supported method, except for the check above, is
-    * PNG_FILTER_TYPE_BASE.  The code below does not use 'method' other than
-    * for the check, so just keep going if png_app_error returns.
-    */
-   if (method != PNG_FILTER_TYPE_BASE)
-      png_app_error(png_ptr, "Unknown custom filter method");
-
-   /* If filter writing is not supported the 'filters' value must be zero,
-    * otherwise the value must be a single, valid, filter value or a set of the
-    * mask values.  The defines in png.h are such that the filter masks used in
-    * this API and internally are 1<<(3+value), value is in the range 0..4, so
-    * this fits in a byte.
-    */
-#  ifdef PNG_WRITE_FILTER_SUPPORTED
-      /* Notice that PNG_NO_FILTERS is 0 and passes this test; this is OK
-       * because filters then gets set to PNG_FILTER_NONE, as is required.
-       */
-      if (filters < PNG_FILTER_VALUE_LAST)
-         filters = 0x08 << filters;
-
-      else if ((filters & ~PNG_ALL_FILTERS) != 0)
+   if (method == PNG_FILTER_TYPE_BASE)
+   {
+      switch (filters & (PNG_ALL_FILTERS | 0x07))
       {
-         png_app_error(png_ptr, "png_set_filter: invalid filters mask/value");
+#ifdef PNG_WRITE_FILTER_SUPPORTED
+         case 5:
+         case 6:
+         case 7: png_app_error(png_ptr, "Unknown row filter for method 0");
+            /* FALL THROUGH */
+#endif /* WRITE_FILTER */
+         case PNG_FILTER_VALUE_NONE:
+            png_ptr->do_filter = PNG_FILTER_NONE; break;
 
-         /* For compatibility with the previous behavior assume a mask value was
-          * passed and ignore the non-mask bits.
-          */
-         filters &= PNG_ALL_FILTERS;
+#ifdef PNG_WRITE_FILTER_SUPPORTED
+         case PNG_FILTER_VALUE_SUB:
+            png_ptr->do_filter = PNG_FILTER_SUB; break;
 
-         /* For a possibly foolish consistency (it shouldn't matter) set
-          * PNG_FILTER_NONE rather than 0.
-          */
-         if (filters == 0)
-            filters = PNG_FILTER_NONE;
+         case PNG_FILTER_VALUE_UP:
+            png_ptr->do_filter = PNG_FILTER_UP; break;
+
+         case PNG_FILTER_VALUE_AVG:
+            png_ptr->do_filter = PNG_FILTER_AVG; break;
+
+         case PNG_FILTER_VALUE_PAETH:
+            png_ptr->do_filter = PNG_FILTER_PAETH; break;
+
+         default:
+            png_ptr->do_filter = (png_byte)filters; break;
+#else
+         default:
+            png_app_error(png_ptr, "Unknown row filter for method 0");
+#endif /* WRITE_FILTER */
       }
-#  else
-      /* PNG_FILTER_VALUE_NONE and PNG_NO_FILTERS are both 0. */
-      if (filters != 0 && filters != PNG_FILTER_NONE)
-         png_app_error(png_ptr, "png_set_filter: no filters supported");
 
-      filters = PNG_FILTER_NONE;
-#  endif
-
-#  ifdef PNG_WRITE_FILTER_SUPPORTED
       /* If we have allocated the row_buf, this means we have already started
        * with the image and we should have allocated all of the filter buffers
        * that have been selected.  If prev_row isn't already allocated, then
@@ -1067,45 +1052,78 @@ png_set_filter(png_structrp png_ptr, int method, int filters)
        * wants to start and stop using particular filters during compression,
        * it should start out with all of the filters, and then add and
        * remove them after the start of compression.
-       *
-       * NOTE: this is a nasty constraint on the code, because it means that the
-       * prev_row buffer must be maintained even if there are currently no
-       * 'prev_row' requiring filters active.
        */
       if (png_ptr->row_buf != NULL)
       {
-         /* Repeat the checks in png_write_start_row; 1 pixel high or wide
-          * images cannot benefit from certain filters.  If this isn't done here
-          * the check below will fire on 1 pixel high images.
-          */
-         if (png_ptr->height == 1)
-            filters &= ~(PNG_FILTER_UP|PNG_FILTER_AVG|PNG_FILTER_PAETH);
-
-         if (png_ptr->width == 1)
-            filters &= ~(PNG_FILTER_SUB|PNG_FILTER_AVG|PNG_FILTER_PAETH);
-
-         if ((filters & (PNG_FILTER_UP|PNG_FILTER_AVG|PNG_FILTER_PAETH)) != 0
-            && png_ptr->prev_row == NULL)
+#ifdef PNG_WRITE_FILTER_SUPPORTED
+         if ((png_ptr->do_filter & PNG_FILTER_SUB) != 0 &&
+             png_ptr->sub_row == NULL)
          {
-            /* This is the error case, however it is benign - the previous row
-             * is not available so the filter can't be used.  Just warn here.
-             */
-            png_app_warning(png_ptr,
-               "png_set_filter: UP/AVG/PAETH cannot be added after start");
-            filters &= ~(PNG_FILTER_UP|PNG_FILTER_AVG|PNG_FILTER_PAETH);
+            png_ptr->sub_row = (png_bytep)png_malloc(png_ptr,
+                (png_ptr->rowbytes + 1));
+            png_ptr->sub_row[0] = PNG_FILTER_VALUE_SUB;
          }
 
-         /* Allocate any required buffers that have not already been allocated.
-          */
-         png_write_alloc_filter_row_buffers(png_ptr, filters);
-      }
-#  endif /* PNG_WRITE_FILTER_SUPPORTED */
+         if ((png_ptr->do_filter & PNG_FILTER_UP) != 0 &&
+              png_ptr->up_row == NULL)
+         {
+            if (png_ptr->prev_row == NULL)
+            {
+               png_warning(png_ptr, "Can't add Up filter after starting");
+               png_ptr->do_filter = (png_byte)(png_ptr->do_filter &
+                   ~PNG_FILTER_UP);
+            }
 
-   /* Finally store the value.
-    * TODO: this field could probably be removed if neither READ nor
-    * WRITE_FILTER are supported.
-    */
-   png_ptr->do_filter = (png_byte)filters; /* SAFE: checked above */
+            else
+            {
+               png_ptr->up_row = (png_bytep)png_malloc(png_ptr,
+                   (png_ptr->rowbytes + 1));
+               png_ptr->up_row[0] = PNG_FILTER_VALUE_UP;
+            }
+         }
+
+         if ((png_ptr->do_filter & PNG_FILTER_AVG) != 0 &&
+              png_ptr->avg_row == NULL)
+         {
+            if (png_ptr->prev_row == NULL)
+            {
+               png_warning(png_ptr, "Can't add Average filter after starting");
+               png_ptr->do_filter = (png_byte)(png_ptr->do_filter &
+                   ~PNG_FILTER_AVG);
+            }
+
+            else
+            {
+               png_ptr->avg_row = (png_bytep)png_malloc(png_ptr,
+                   (png_ptr->rowbytes + 1));
+               png_ptr->avg_row[0] = PNG_FILTER_VALUE_AVG;
+            }
+         }
+
+         if ((png_ptr->do_filter & PNG_FILTER_PAETH) != 0 &&
+             png_ptr->paeth_row == NULL)
+         {
+            if (png_ptr->prev_row == NULL)
+            {
+               png_warning(png_ptr, "Can't add Paeth filter after starting");
+               png_ptr->do_filter &= (png_byte)(~PNG_FILTER_PAETH);
+            }
+
+            else
+            {
+               png_ptr->paeth_row = (png_bytep)png_malloc(png_ptr,
+                   (png_ptr->rowbytes + 1));
+               png_ptr->paeth_row[0] = PNG_FILTER_VALUE_PAETH;
+            }
+         }
+
+         if (png_ptr->do_filter == PNG_NO_FILTERS)
+#endif /* WRITE_FILTER */
+            png_ptr->do_filter = PNG_FILTER_NONE;
+      }
+   }
+   else
+      png_error(png_ptr, "Unknown custom filter method");
 }
 
 /* This allows us to influence the way in which libpng chooses the "best"
@@ -1732,7 +1750,7 @@ png_write_image_16bit(png_voidp argument)
       display->first_row);
    png_uint_16p output_row = png_voidcast(png_uint_16p, display->local_row);
    png_uint_16p row_end;
-   const int channels = (image->format & PNG_FORMAT_FLAG_COLOR) ? 3 : 1;
+   const int channels = (image->format & PNG_FORMAT_FLAG_COLOR) != 0 ? 3 : 1;
    int aindex = 0;
    png_uint_32 y = image->height;
 
@@ -1889,7 +1907,7 @@ png_write_image_8bit(png_voidp argument)
       display->first_row);
    png_bytep output_row = png_voidcast(png_bytep, display->local_row);
    png_uint_32 y = image->height;
-   const int channels = (image->format & PNG_FORMAT_FLAG_COLOR) ? 3 : 1;
+   const int channels = (image->format & PNG_FORMAT_FLAG_COLOR) != 0 ? 3 : 1;
 
    if ((image->format & PNG_FORMAT_FLAG_ALPHA) != 0)
    {
@@ -1994,7 +2012,7 @@ png_image_set_PLTE(png_image_write_control *display)
 #  endif
 
 #  ifdef PNG_FORMAT_BGR_SUPPORTED
-      const int bgr = (format & PNG_FORMAT_FLAG_BGR) ? 2 : 0;
+      const int bgr = (format & PNG_FORMAT_FLAG_BGR) != 0 ? 2 : 0;
 #  else
 #     define bgr 0
 #  endif
@@ -2129,10 +2147,11 @@ png_image_write_main(png_voidp argument)
    png_inforp info_ptr = image->opaque->info_ptr;
    png_uint_32 format = image->format;
 
-   int colormap = (format & PNG_FORMAT_FLAG_COLORMAP) != 0;
-   int linear = !colormap && (format & PNG_FORMAT_FLAG_LINEAR) != 0; /* input */
-   int alpha = !colormap && (format & PNG_FORMAT_FLAG_ALPHA) != 0;
-   int write_16bit = linear && !colormap && !display->convert_to_8bit;
+   /* The following four ints are actually booleans */
+   int colormap = (format & PNG_FORMAT_FLAG_COLORMAP);
+   int linear = !colormap && (format & PNG_FORMAT_FLAG_LINEAR); /* input */
+   int alpha = !colormap && (format & PNG_FORMAT_FLAG_ALPHA);
+   int write_16bit = linear && !colormap && (display->convert_to_8bit == 0);
 
 #  ifdef PNG_BENIGN_ERRORS_SUPPORTED
       /* Make sure we error out on any bad situation */
@@ -2219,7 +2238,7 @@ png_image_write_main(png_voidp argument)
 #  ifdef PNG_SIMPLIFIED_WRITE_BGR_SUPPORTED
       if ((format & PNG_FORMAT_FLAG_BGR) != 0)
       {
-         if (!colormap && (format & PNG_FORMAT_FLAG_COLOR) != 0)
+         if (colormap == 0 && (format & PNG_FORMAT_FLAG_COLOR) != 0)
             png_set_bgr(png_ptr);
          format &= ~PNG_FORMAT_FLAG_BGR;
       }
@@ -2228,7 +2247,7 @@ png_image_write_main(png_voidp argument)
 #  ifdef PNG_SIMPLIFIED_WRITE_AFIRST_SUPPORTED
       if ((format & PNG_FORMAT_FLAG_AFIRST) != 0)
       {
-         if (!colormap && (format & PNG_FORMAT_FLAG_ALPHA) != 0)
+         if (colormap == 0 && (format & PNG_FORMAT_FLAG_ALPHA) != 0)
             png_set_swap_alpha(png_ptr);
          format &= ~PNG_FORMAT_FLAG_AFIRST;
       }
@@ -2275,7 +2294,8 @@ png_image_write_main(png_voidp argument)
     * before it is written.  This only applies when the input is 16-bit and
     * either there is an alpha channel or it is converted to 8-bit.
     */
-   if ((linear && alpha) || (!colormap && display->convert_to_8bit))
+   if ((linear != 0 && alpha != 0 ) ||
+       (colormap == 0 && display->convert_to_8bit != 0))
    {
       png_bytep row = png_voidcast(png_bytep, png_malloc(png_ptr,
          png_get_rowbytes(png_ptr, info_ptr)));

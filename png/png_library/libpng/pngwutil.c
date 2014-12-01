@@ -1,7 +1,7 @@
 
 /* pngwutil.c - utilities to write a PNG file
  *
- * Last changed in libpng 1.7.0 [(PENDING RELEASE)]
+ * Last changed in libpng 1.6.15 [November 20, 2014]
  * Copyright (c) 1998-2014 Glenn Randers-Pehrson
  * (Version 0.96 Copyright (c) 1996, 1997 Andreas Dilger)
  * (Version 0.88 Copyright (c) 1995, 1996 Guy Eric Schalnat, Group 42, Inc.)
@@ -747,7 +747,7 @@ png_check_keyword(png_structrp png_ptr, png_const_charp key, png_bytep new_key)
 
    return key_len;
 }
-#endif
+#endif /* WRITE_TEXT || WRITE_pCAL || WRITE_iCCP || WRITE_sPLT */
 
 /* Write the IHDR chunk, and update the png_struct with the necessary
  * information.  Note that the rest of this code depends upon this
@@ -1196,6 +1196,7 @@ png_write_iCCP(png_structrp png_ptr, png_const_charp name,
    png_uint_32 profile_len;
    png_byte new_name[81]; /* 1 byte for the compression byte */
    compression_state comp;
+   png_uint_32 temp;
 
    png_debug(1, "in png_write_iCCP");
 
@@ -1210,7 +1211,8 @@ png_write_iCCP(png_structrp png_ptr, png_const_charp name,
    if (profile_len < 132)
       png_error(png_ptr, "ICC profile too short");
 
-   if (profile_len & 0x03)
+   temp = (png_uint_32) (*(profile+8));
+   if (temp > 3 && (profile_len & 0x03))
       png_error(png_ptr, "ICC profile length invalid (not a multiple of 4)");
 
    {
@@ -1428,11 +1430,10 @@ png_write_tRNS(png_structrp png_ptr, png_const_bytep trans_alpha,
 
    if (color_type == PNG_COLOR_TYPE_PALETTE)
    {
-      if (num_trans <= 0 || num_trans > png_ptr->num_palette)
+      if (num_trans <= 0 || num_trans > (int)png_ptr->num_palette)
       {
-         /* This is an error which can only be reliably detected late. */
-         png_app_error(png_ptr,
-            "Invalid number of transparent colors specified");
+         png_app_warning(png_ptr,
+             "Invalid number of transparent colors specified");
          return;
       }
 
@@ -1446,8 +1447,7 @@ png_write_tRNS(png_structrp png_ptr, png_const_bytep trans_alpha,
       /* One 16 bit value */
       if (tran->gray >= (1 << png_ptr->bit_depth))
       {
-         /* This can no longer happen because it is checked in png_set_tRNS */
-         png_app_error(png_ptr,
+         png_app_warning(png_ptr,
              "Ignoring attempt to write tRNS chunk out-of-range for bit_depth");
 
          return;
@@ -1469,8 +1469,7 @@ png_write_tRNS(png_structrp png_ptr, png_const_bytep trans_alpha,
       if ((buf[0] | buf[2] | buf[4]) != 0)
 #endif
       {
-         /* Also checked in png_set_tRNS */
-         png_app_error(png_ptr,
+         png_app_warning(png_ptr,
            "Ignoring attempt to write 16-bit tRNS chunk when bit_depth is 8");
          return;
       }
@@ -1480,8 +1479,7 @@ png_write_tRNS(png_structrp png_ptr, png_const_bytep trans_alpha,
 
    else
    {
-      /* Checked in png_set_tRNS */
-      png_app_error(png_ptr, "Can't write tRNS with an alpha channel");
+      png_app_warning(png_ptr, "Can't write tRNS with an alpha channel");
    }
 }
 #endif
@@ -1767,7 +1765,7 @@ png_write_iTXt(png_structrp png_ptr, int compression, png_const_charp key,
       png_write_compressed_data_out(png_ptr, &comp);
 
    else
-      png_write_chunk_data(png_ptr, (png_const_bytep)text, comp.output_len);
+      png_write_chunk_data(png_ptr, (png_const_bytep)text, comp.input_len);
 
    png_write_chunk_end(png_ptr);
 }
@@ -1940,47 +1938,6 @@ png_write_tIME(png_structrp png_ptr, png_const_timep mod_time)
 }
 #endif
 
-#ifdef PNG_WRITE_FILTER_SUPPORTED
-void /* PRIVATE */
-png_write_alloc_filter_row_buffers(png_structrp png_ptr, int filters)
-   /* Allocate row buffers for any filters that need them, this is also called
-    * from png_set_filter if the filters are changed during write to ensure that
-    * the required buffers exist.  png_set_filter ensures that up/avg/paeth are
-    * only set if png_ptr->prev_row is allocated.
-    */
-{
-   /* The buffer size is determined just by the output row size, not any
-    * processing requirements.
-    */
-   png_alloc_size_t buf_size = png_ptr->rowbytes + 1;
-
-   if ((filters & PNG_FILTER_SUB) != 0 && png_ptr->sub_row == NULL)
-   {
-      png_ptr->sub_row = png_voidcast(png_bytep, png_malloc(png_ptr, buf_size));
-      png_ptr->sub_row[0] = PNG_FILTER_VALUE_SUB;
-   }
-
-   if ((filters & PNG_FILTER_UP) != 0 && png_ptr->up_row == NULL)
-   {
-      png_ptr->up_row = png_voidcast(png_bytep, png_malloc(png_ptr, buf_size));
-      png_ptr->up_row[0] = PNG_FILTER_VALUE_UP;
-   }
-
-   if ((filters & PNG_FILTER_AVG) != 0 && png_ptr->avg_row == NULL)
-   {
-      png_ptr->avg_row = png_voidcast(png_bytep, png_malloc(png_ptr, buf_size));
-      png_ptr->avg_row[0] = PNG_FILTER_VALUE_AVG;
-   }
-
-   if ((filters & PNG_FILTER_PAETH) != 0 && png_ptr->paeth_row == NULL)
-   {
-      png_ptr->paeth_row = png_voidcast(png_bytep, png_malloc(png_ptr,
-         buf_size));
-      png_ptr->paeth_row[0] = PNG_FILTER_VALUE_PAETH;
-   }
-}
-#endif /* WRITE_FILTER */
-
 /* Initializes the row writing capability of libpng */
 void /* PRIVATE */
 png_write_start_row(png_structrp png_ptr)
@@ -2001,17 +1958,10 @@ png_write_start_row(png_structrp png_ptr)
    static PNG_CONST png_byte png_pass_yinc[7] = {8, 8, 8, 4, 4, 2, 2};
 #endif
 
-#ifdef PNG_WRITE_FILTER_SUPPORTED
-   int filters;
-#endif
-
    png_alloc_size_t buf_size;
    int usr_pixel_depth;
 
    png_debug(1, "in png_write_start_row");
-
-   if (png_ptr == NULL)
-      return;
 
    usr_pixel_depth = png_ptr->usr_channels * png_ptr->usr_bit_depth;
    buf_size = PNG_ROWBYTES(usr_pixel_depth, png_ptr->width) + 1;
@@ -2021,34 +1971,50 @@ png_write_start_row(png_structrp png_ptr)
    png_ptr->maximum_pixel_depth = (png_byte)usr_pixel_depth;
 
    /* Set up row buffer */
-   png_ptr->row_buf = png_voidcast(png_bytep, png_malloc(png_ptr, buf_size));
+   png_ptr->row_buf = (png_bytep)png_malloc(png_ptr, buf_size);
 
    png_ptr->row_buf[0] = PNG_FILTER_VALUE_NONE;
 
 #ifdef PNG_WRITE_FILTER_SUPPORTED
-   filters = png_ptr->do_filter;
+   /* Set up filtering buffer, if using this filter */
+   if (png_ptr->do_filter & PNG_FILTER_SUB)
+   {
+      png_ptr->sub_row = (png_bytep)png_malloc(png_ptr, png_ptr->rowbytes + 1);
 
-   if (png_ptr->height == 1)
-      filters &= ~(PNG_FILTER_UP|PNG_FILTER_AVG|PNG_FILTER_PAETH);
+      png_ptr->sub_row[0] = PNG_FILTER_VALUE_SUB;
+   }
 
-   if (png_ptr->width == 1)
-      filters &= ~(PNG_FILTER_SUB|PNG_FILTER_AVG|PNG_FILTER_PAETH);
+   /* We only need to keep the previous row if we are using one of these. */
+   if ((png_ptr->do_filter &
+      (PNG_FILTER_AVG | PNG_FILTER_UP | PNG_FILTER_PAETH)) != 0)
+   {
+      /* Set up previous row buffer */
+      png_ptr->prev_row = (png_bytep)png_calloc(png_ptr, buf_size);
 
-   if (filters == 0)
-      filters = PNG_FILTER_NONE;
+      if ((png_ptr->do_filter & PNG_FILTER_UP) != 0)
+      {
+         png_ptr->up_row = (png_bytep)png_malloc(png_ptr,
+            png_ptr->rowbytes + 1);
 
-   /* We only need to keep the previous row if we are using one of the following
-    * filters.
-    */
-   if ((filters & (PNG_FILTER_AVG | PNG_FILTER_UP | PNG_FILTER_PAETH)) != 0)
-      png_ptr->prev_row = png_voidcast(png_bytep, png_calloc(png_ptr,
-         buf_size));
+         png_ptr->up_row[0] = PNG_FILTER_VALUE_UP;
+      }
 
-   png_write_alloc_filter_row_buffers(png_ptr, filters);
+      if ((png_ptr->do_filter & PNG_FILTER_AVG) != 0)
+      {
+         png_ptr->avg_row = (png_bytep)png_malloc(png_ptr,
+             png_ptr->rowbytes + 1);
 
-   png_ptr->do_filter = (png_byte)filters; /* in case it was changed above */
-#else
-   png_ptr->do_filter = PNG_FILTER_NONE;
+         png_ptr->avg_row[0] = PNG_FILTER_VALUE_AVG;
+      }
+
+      if ((png_ptr->do_filter & PNG_FILTER_PAETH) != 0)
+      {
+         png_ptr->paeth_row = (png_bytep)png_malloc(png_ptr,
+             png_ptr->rowbytes + 1);
+
+         png_ptr->paeth_row[0] = PNG_FILTER_VALUE_PAETH;
+      }
+   }
 #endif /* WRITE_FILTER */
 
 #ifdef PNG_WRITE_INTERLACING_SUPPORTED
@@ -2348,7 +2314,8 @@ png_do_write_interlace(png_row_infop row_info, png_bytep row, int pass)
  * been specified by the application, and then writes the row out with the
  * chosen filter.
  */
-static void png_write_filtered_row(png_structrp png_ptr, png_bytep filtered_row,
+static void
+png_write_filtered_row(png_structrp png_ptr, png_bytep filtered_row,
    png_size_t row_bytes);
 
 #define PNG_MAXSUM (((png_uint_32)(-1)) >> 1)
@@ -3036,7 +3003,6 @@ png_write_filtered_row(png_structrp png_ptr, png_bytep filtered_row,
 
    png_compress_IDAT(png_ptr, filtered_row, full_row_length, Z_NO_FLUSH);
 
-#ifdef PNG_WRITE_FILTER_SUPPORTED
    /* Swap the current and previous rows */
    if (png_ptr->prev_row != NULL)
    {
@@ -3046,7 +3012,6 @@ png_write_filtered_row(png_structrp png_ptr, png_bytep filtered_row,
       png_ptr->prev_row = png_ptr->row_buf;
       png_ptr->row_buf = tptr;
    }
-#endif /* WRITE_FILTER */
 
    /* Finish row - updates counters and flushes zlib if last row */
    png_write_finish_row(png_ptr);
@@ -3059,6 +3024,6 @@ png_write_filtered_row(png_structrp png_ptr, png_bytep filtered_row,
    {
       png_write_flush(png_ptr);
    }
-#endif
+#endif /* WRITE_FLUSH */
 }
 #endif /* WRITE */

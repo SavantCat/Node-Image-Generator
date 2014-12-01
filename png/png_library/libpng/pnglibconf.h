@@ -1,8 +1,8 @@
-/* libpng 1.7.0beta42 STANDARD API DEFINITION */
+/* libpng 1.6.15 STANDARD API DEFINITION */
 
 /* pnglibconf.h - library build configuration */
 
-/* Libpng version 1.7.0beta42 - November 20, 2014 */
+/* Libpng version 1.6.15 - November 20, 2014 */
 
 /* Copyright (c) 1998-2014 Glenn Randers-Pehrson */
 
@@ -102,6 +102,8 @@
 #define PNG_SAVE_UNKNOWN_CHUNKS_SUPPORTED
 #define PNG_SEQUENTIAL_READ_SUPPORTED
 #define PNG_SETJMP_SUPPORTED
+#define PNG_SET_CHUNK_CACHE_LIMIT_SUPPORTED
+#define PNG_SET_CHUNK_MALLOC_LIMIT_SUPPORTED
 #define PNG_SET_OPTION_SUPPORTED
 #define PNG_SET_UNKNOWN_CHUNKS_SUPPORTED
 #define PNG_SET_USER_LIMITS_SUPPORTED
@@ -184,7 +186,6 @@
 #define PNG_zTXt_SUPPORTED
 /* end of options */
 /* settings */
-#define PNG_ABORT { (abort()); }
 #define PNG_API_RULE 0
 #define PNG_COST_SHIFT 3
 #define PNG_DEFAULT_READ_MACROS 1
@@ -198,9 +199,8 @@
 #define PNG_TEXT_Z_DEFAULT_COMPRESSION (-1)
 #define PNG_TEXT_Z_DEFAULT_STRATEGY 0
 #define PNG_WEIGHT_SHIFT 8
-#define PNG_ZLIB_VERNUM 0 /* unknown */
 #define PNG_ZBUF_SIZE 8192
-#define PNG_ZLIB_HEADER <zlib.h>
+#define PNG_ZLIB_VERNUM 0 /* unknown */
 #define PNG_Z_DEFAULT_COMPRESSION (-1)
 #define PNG_Z_DEFAULT_NOFILTER_STRATEGY 0
 #define PNG_Z_DEFAULT_STRATEGY 1

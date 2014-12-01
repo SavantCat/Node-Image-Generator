@@ -1,4 +1,4 @@
-;Version 1.7.0beta42
+;Version 1.6.15
 ;--------------------------------------------------------------
 ; LIBPNG symbol list as a Win32 DEF file
 ; Contains all the symbols that can be exported from libpng
@@ -15,6 +15,7 @@ EXPORTS
  png_set_compression_buffer_size @7
  png_set_longjmp_fn @8
  png_longjmp @9
+ png_reset_zstream @10
  png_create_read_struct_2 @11
  png_create_write_struct_2 @12
  png_write_sig @13
@@ -23,9 +24,11 @@ EXPORTS
  png_write_chunk_data @16
  png_write_chunk_end @17
  png_create_info_struct @18
+ png_info_init_3 @19
  png_write_info_before_PLTE @20
  png_write_info @21
  png_read_info @22
+ png_convert_to_rfc1123 @23
  png_convert_from_struct_tm @24
  png_convert_from_time_t @25
  png_set_expand @26
@@ -101,6 +104,9 @@ EXPORTS
  png_malloc_warn @96
  png_free @97
  png_free_data @98
+ png_data_freer @99
+ png_malloc_default @100
+ png_free_default @101
  png_error @102
  png_chunk_error @103
  png_err @104

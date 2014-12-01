@@ -19,8 +19,8 @@ ZLIBINC=/opt/zlib/include
 #   SHAREDLIB=libz.sl
 
 # Library name:
-LIBNAME = libpng17
-PNGMAJ = 17
+LIBNAME = libpng16
+PNGMAJ = 16
 
 # Shared library names:
 LIBSO=$(LIBNAME).sl
@@ -45,7 +45,7 @@ CCFLAGS=-O -Ae -Wl,+vnocompatwarnings +DD64 +Z
 
 LDFLAGS=-L. -L$(ZLIBLIB) -lpng -lz -lm
 
-# where make install puts libpng.a, libpng17.sl, and png.h
+# where make install puts libpng.a, libpng16.sl, and png.h
 prefix=/opt/libpng
 exec_prefix=$(prefix)
 INCPATH=$(prefix)/include
@@ -100,7 +100,7 @@ libpng.pc:
 	-e s!@exec_prefix@!$(exec_prefix)! \
 	-e s!@libdir@!$(LIBPATH)! \
 	-e s!@includedir@!$(INCPATH)! \
-	-e s!-lpng17!-lpng17\ -lz\ -lm! > libpng.pc
+	-e s!-lpng16!-lpng16\ -lz\ -lm! > libpng.pc
 
 libpng-config:
 	( cat scripts/libpng-config-head.in; \
@@ -108,7 +108,7 @@ libpng-config:
 	echo I_opts=\"-I$(INCPATH)/$(LIBNAME)\"; \
 	echo ccopts=\"-O -Ae -Wl,+vnocompatwarnings +DD64 +Z\"; \
 	echo L_opts=\"-L$(LIBPATH)\"; \
-	echo libs=\"-lpng17 -lz -lm\"; \
+	echo libs=\"-lpng16 -lz -lm\"; \
 	cat scripts/libpng-config-body.in ) > libpng-config
 	chmod +x libpng-config
 

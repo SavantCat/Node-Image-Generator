@@ -1,7 +1,7 @@
 
 /* pngvalid.c - validate libpng by constructing then reading png files.
  *
- * Last changed in libpng 1.7.0 [(PENDING RELEASE)]
+ * Last changed in libpng 1.6.14 [October 23, 2014]
  * Copyright (c) 2014 Glenn Randers-Pehrson
  * Written by John Cunningham Bowler
  *
@@ -1565,7 +1565,7 @@ set_store_for_write(png_store *ps, png_infopp ppi,
 
          else
 #     endif
-         ps->pwrite = png_create_write_struct(PNG_LIBPNG_VER_STRING,
+         ps->pwrite = png_create_write_struct(png_get_libpng_ver(NULL),
             ps, store_error, store_warning);
 
       png_set_write_fn(ps->pwrite, ps, store_write, store_flush);
@@ -3172,10 +3172,10 @@ init_standard_palette(png_store *ps, png_structp pp, png_infop pi, int npalette,
       for (; i<256; ++i)
          tRNS[i] = 24;
 
-#ifdef PNG_WRITE_tRNS_SUPPORTED
+#  ifdef PNG_WRITE_tRNS_SUPPORTED
          if (j > 0)
             png_set_tRNS(pp, pi, tRNS, j, 0/*color*/);
-#endif
+#  endif
    }
 }
 
@@ -6801,14 +6801,6 @@ image_transform_png_set_rgb_to_gray_ini(PNG_CONST image_transform *this,
                pow((that->this.bit_depth == 16 ?
                   8. : 8. + (1<<(15-PNG_MAX_GAMMA_8)))/65535, data.gamma);
 #        endif
-         that->pm->limit += pow(
-#           if PNG_MAX_GAMMA_8 < 14
-               (that->this.bit_depth == 16 ? 8. :
-                  6. + (1<<(15-PNG_MAX_GAMMA_8)))
-#           else
-               8.
-#           endif
-               /65535, data.gamma);
       }
 
       else
@@ -9297,6 +9289,28 @@ static void gamma_composition_test(png_modifier *pm,
       r = random_32();
       background.blue = (png_uint_16)r;
       background.gray = (png_uint_16)(r >> 16);
+
+      /* In earlier libpng versions, those where DIGITIZE is set, any background
+       * gamma correction in the expand16 case was done using 8-bit gamma
+       * correction tables, resulting in larger errors.  To cope with those
+       * cases use a 16-bit background value which will handle this gamma
+       * correction.
+       */
+#     if DIGITIZE
+         if (expand_16 && (do_background == PNG_BACKGROUND_GAMMA_UNIQUE ||
+                           do_background == PNG_BACKGROUND_GAMMA_FILE) &&
+            fabs(bg*screen_gamma-1) > PNG_GAMMA_THRESHOLD)
+         {
+            /* The background values will be looked up in an 8-bit table to do
+             * the gamma correction, so only select values which are an exact
+             * match for the 8-bit table entries:
+             */
+            background.red = (png_uint_16)((background.red >> 8) * 257);
+            background.green = (png_uint_16)((background.green >> 8) * 257);
+            background.blue = (png_uint_16)((background.blue >> 8) * 257);
+            background.gray = (png_uint_16)((background.gray >> 8) * 257);
+         }
+#     endif
    }
 
    else /* 8 bit colors */

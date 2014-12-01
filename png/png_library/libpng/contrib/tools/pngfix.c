@@ -2,7 +2,7 @@
  *
  * Copyright (c) 2014 John Cunningham Bowler
  *
- * Last changed in libpng 1.6.14 [(PENDING RELEASE)]
+ * Last changed in libpng 1.6.14 [October 23, 2014]
  *
  * This code is released under the libpng license.
  * For conditions of distribution and use, see the disclaimer
@@ -3580,7 +3580,7 @@ read_png(struct control *control)
    volatile png_bytep row = NULL, display = NULL;
    volatile int rc;
 
-   png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, control,
+   png_ptr = png_create_read_struct(png_get_libpng_ver(NULL), control,
       error_handler, warning_handler);
 
    if (png_ptr == NULL)

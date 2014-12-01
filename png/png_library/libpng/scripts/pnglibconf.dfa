@@ -196,26 +196,6 @@ setting API_RULE default 0
 
 setting PREFIX
 
-# This says that a prefix has been added to zlib API function names; at present
-# it is informational. The builder of zlib must ensure that zlib.h contains the
-# appropriate renames
-
-setting ZLIB_PREFIX
-
-# This is used to select an alternative zlib header file - it must look pretty
-# much like the standard zlib.h, but this makes it easier to ensure the correct
-# header file is used.  Set it to the "" or <> quoted file name (a full file
-# name is acceptable).  Prior to 1.7.0 this used "zlib.h", so it would use a
-# zlib.h in the same directory as the libpng source, from 1.7.0 it defaults to
-# just searching the -I directories.  Prior to 1.6.0 the #include appeared in
-# the exported header files - so it was quite important to use "zlib.h" to
-# ensure that applications always got the zlib.h from the same directory as
-# png.h.
-setting ZLIB_HEADER default <zlib.h>
-
-# Include the zlib header too, so that the defaults below are known
-@#  include <zlib.h>
-
 # Implementation specific control of the optimizations, enabled by those
 # hardware or software options that need it (typically when run-time choices
 # must be made by the user)
@@ -241,7 +221,7 @@ option SET_OPTION disabled
 # ARM_NEON_API:   (PNG_ARM_NEON == 1) allow the optimization to be switched on
 #                 with png_set_option
 # ARM_NEON_CHECK: (PNG_ARM_NEON == 1) compile a run-time check to see if Neon
-#                 extensions are supported, this is poorly supported and
+#                 extensions are supported. This is poorly supported and
 #                 deprectated - use the png_set_option API.
 setting ARM_NEON_OPT
 option ARM_NEON_API disabled requires ALIGNED_MEMORY enables SET_OPTION,
@@ -258,24 +238,19 @@ option ARM_NEON_CHECK disabled requires ALIGNED_MEMORY,
 #
 # The TEXT values are the defaults when writing compressed text (all forms)
 
+# Include the zlib header so that the defaults below are known
+@#  include <zlib.h>
+
 # The '@' here means to substitute the value when pnglibconf.h is built
-setting ZLIB_VERNUM default @ZLIB_VERNUM
 setting Z_DEFAULT_COMPRESSION default @Z_DEFAULT_COMPRESSION
 # TODO: why aren't these Z_RLE; zlib.h says that Z_RLE, specifically, is
 # appropriate for PNG images, maybe it doesn't exist in all versions?
 setting Z_DEFAULT_STRATEGY default @Z_FILTERED
 setting Z_DEFAULT_NOFILTER_STRATEGY default @Z_DEFAULT_STRATEGY
+setting ZLIB_VERNUM default @ZLIB_VERNUM
 
 setting TEXT_Z_DEFAULT_COMPRESSION default @Z_DEFAULT_COMPRESSION
 setting TEXT_Z_DEFAULT_STRATEGY default @Z_DEFAULT_STRATEGY
-
-# Define this to something that will stop, at least, the current thread; control
-# cannot proceed beyond the PNG_ABORT operation and compilation of pngerror.c is
-# likely to fail if the operation implemented does not clearly terminate the
-# thread or process.  The default implementation is the ANSI-C abort function,
-# but any manner of C code may be used.
-
-setting ABORT default { (abort()); }
 
 # Default to using the read macros
 
@@ -375,12 +350,33 @@ option USER_MEM
 
 option IO_STATE
 
-# Libpng limits: limit the size of images and data on read.
+# This is only for PowerPC big-endian and 680x0 systems
+# some testing, not enabled by default.
+# NO LONGER USED
+
+#option READ_BIG_ENDIAN disabled
+
+# Allow users to control limits on what the READ code will
+# read:
+
+# Added at libpng-1.2.43; adds limit fields to png_struct,
+# allows some usages of these fields
+
+option USER_LIMITS
+
+# Added at libpng-1.2.6; adds setting APIs, allows additional
+# usage of this field (UTSL)
+
+option SET_USER_LIMITS requires USER_LIMITS
+
+# Feature added at libpng-1.4.0, this flag added at 1.4.1
+option SET_USER_LIMITS enables SET_CHUNK_CACHE_LIMIT
+# Feature added at libpng-1.4.1, this flag added at 1.4.1
+
+option SET_USER_LIMITS enables SET_CHUNK_MALLOC_LIMIT
+
+# Libpng limits.
 #
-# If this option is disabled all the limit checking code will be disabled:
-
-option USER_LIMITS requires READ
-
 # If these settings are *not* set libpng will not limit the size of
 # images or the size of data in ancilliary chunks.  This does lead to
 # security issues if PNG files come from untrusted sources.  Settings have the
@@ -404,10 +400,6 @@ setting USER_CHUNK_MALLOC_MAX
 # them in pngusr.dfa with '@#define PNG_setting value' lines.
 option SAFE_LIMITS enables USER_LIMITS disabled
 = SAFE_LIMITS SAFE_LIMITS
-
-# If this option is enabled APIs to set the above limits at run time are added;
-# without this the hardwired (compile time) limits will be used.
-option SET_USER_LIMITS requires USER_LIMITS
 
 # All of the following options relate to code capabilities for
 # processing image data before creating a PNG or after reading one.
