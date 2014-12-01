@@ -1,110 +1,41 @@
-#include "common.h";
+#include <node.h>
+#include <node_buffer.h>
+
 #include "MakePNG.h"
+#include "encoder.h"
+
+#include "common.h";
+
 
 using namespace v8;
+using namespace node;
 
 Handle<Value> png_to_memory(const Arguments& args) {
 	HandleScope scope;
-	Png png;
 	int w, h, i, j;
-	ui8   **raw,*out;
-
-	w = args[0]->Int32Value();
-	h = args[1]->Int32Value();
-
-	raw = new ui8*[h];
-	for (i = 0; i < h; i++){
-		raw[i] = new ui8[w * 3];
-	}
-	printf("A");
-	Local<Array> data = Local<Array>::Cast(args[2]);
-	for (i = 0; i < h; i++) {                           // 以下５行は単純なテストパターンを作ります
-		for (j = 0; j<w * 3; j += 3) {
-			raw[i][j    ] = (ui8)(data->Get(j + (w * 3 * i))->Int32Value());
-			raw[i][j + 1] = (ui8)(data->Get(j + 1 + (w * 3 * i))->Int32Value());
-			raw[i][j + 2] = (ui8)(data->Get(j + 2 + (w * 3 * i))->Int32Value());
-		}
-	}
-	printf("B");
-	
-
-	png.init();
-	//png.write_png_rgb(w, h, *file, raw);
-	png.make_png_buffer(w, h, raw, out);
-	printf("%s",out);
-	//png.write_png_fp_to_memory(w,h,raw);
-	png.png_free();
-	
-
-	return scope.Close(Undefined());
-
-
-
-
-
-
-
-
-	/*
-	int w, h, i, j;
+	ui8 *raw;
 	int len;
-	ui8   *raw;
-	std::vector<ui8> *out;
-	out->clear();
 
 	w = args[0]->Int32Value();
 	h = args[1]->Int32Value();
 
-	//raw = new ui8[w*h*3];
+	Local<Object>	bufferObj    = args[2]->ToObject();
+	char*			bufferData   = Buffer::Data(bufferObj);
+	size_t          bufferLength = Buffer::Length(bufferObj);
 
-	Local<Array> data = Local<Array>::Cast(args[2]);
-		
-	
+	PngEncoder png((ui8*)bufferData,w,h);
+	png.encode();
 
-	for (i = 0; i < w*h*3; i++) {                           // 以下５行は単純なテストパターンを作ります
-	raw[i] = (ui8)(data->Get(i)->Int32Value());
-	}
-	*/
+	len = png.get_png_len();
+	Buffer *buf = Buffer::New(len);
+	memcpy(Buffer::Data(buf->handle_),png.get_png(),len);
 
-	//printf("A\n");
-	//png.make_png_buffer(w, h, raw, out);
-	//printf("C\n");
-	//len = out->size();
-//	printf("%d\n",len);
-
-	//Local<Array> image = Array::New(len);
-	
-	//printf("%d\n", v8::Number::New(out->at(i)));
-	/*
-	
-	for (i = 0; i < image->Length(); ++i ) {
-		image->Set(i, Int32::New(i));
-	}
-	*/
-	//out->clear();
-
-	
-	//node::Buffer *image = node::Buffer::New(len);
-	/*
-	printf("D\n");
-	memcpy(node::Buffer::Data(image), out, len);
-	printf("E\n");
-	Local<Object> globalObj = Context::GetCurrent()->Global();
-	Local<Function> bufferConstructor = Local<Function>::Cast(globalObj->Get(String::New("Buffer")));
-	Handle<Value> constructorArgs[3] = { image->handle_, v8::Integer::New(len), v8::Integer::New(0) };
-	Local<Object> actualBuffer = bufferConstructor->NewInstance(3, constructorArgs);
-	*/
-
-	
-	
-	//printf("F\n");
-
-	//return scope.Close(Undefined());
+	return scope.Close(buf->handle_);
 }
 
 Handle<Value> write_png_gray(const Arguments& args) {
 	HandleScope scope;
-	Png png;
+	PngMaker png;
 	int w, h, i, j;
 	unsigned char   **raw;
 
@@ -128,7 +59,6 @@ Handle<Value> write_png_gray(const Arguments& args) {
 		}
 	}
 
-	png.init();
 	png.write_png_gray(w, h,*file,raw);
 
 	std::cout << "end" << std::endl;
@@ -138,7 +68,7 @@ Handle<Value> write_png_gray(const Arguments& args) {
 
 Handle<Value> write_png_rgb(const Arguments& args) {
 	HandleScope scope;
-	Png png;
+	PngMaker png;
 	int w, h, i, j;
 	unsigned char   **raw;
 
@@ -164,12 +94,9 @@ Handle<Value> write_png_rgb(const Arguments& args) {
 		}
 	}
 	
-	png.init();
 	png.write_png_rgb(w, h, *file, raw);
 	png.png_free();
 	
-
-
 	std::cout << "end" << std::endl;
 
 	return scope.Close(Undefined());

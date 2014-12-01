@@ -1,3 +1,6 @@
+#include <png.h>
+#include <cstdlib>
+
 #include "common.h";
 
 class PngEncoder {
