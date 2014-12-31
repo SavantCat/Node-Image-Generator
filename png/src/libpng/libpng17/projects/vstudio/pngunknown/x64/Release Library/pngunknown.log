@@ -1,0 +1,27 @@
+﻿2015/01/01 0:35:16 にビルドを開始しました。
+     1>ノード 5 上のプロジェクト "G:\GitHub\Node-Image-Generator\png\png_library\libpng17\projects\vstudio\pngunknown\pngunknown.vcxproj" (Build ターゲット)。
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\CL.exe /c /I..\..\..\..\zlib /I..\..\..\scripts /Zi /nologo /W4 /WX /Ox /Oi /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _UNICODE /D UNICODE /GF /Gm- /EHsc /MT /GS /Gy- /fp:precise /fp:except- /Zc:wchar_t /Zc:forScope /Fo"x64\Release Library\\" /Fd"x64\Release Library\vc120.pdb" /FR"x64\Release Library\\" /Gd /TC /wd4996 /wd4127 /errorReport:prompt ..\..\..\contrib\libtests\pngunknown.c
+         pngunknown.c
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"G:\GitHub\Node-Image-Generator\png\png_library\libpng17\projects\vstudio\x64\Release Library\pngunknown.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:"G:\GitHub\Node-Image-Generator\png\png_library\libpng17\projects\vstudio\x64\Release Library\\" libpng17.lib zlib.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"G:\GitHub\Node-Image-Generator\png\png_library\libpng17\projects\vstudio\x64\Release Library\pngunknown.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"G:\GitHub\Node-Image-Generator\png\png_library\libpng17\projects\vstudio\x64\Release Library\pngunknown.lib" /MACHINE:X64 "x64\Release Library\pngunknown.obj"
+         コード生成しています。
+         コード生成が終了しました。
+         pngunknown.vcxproj -> G:\GitHub\Node-Image-Generator\png\png_library\libpng17\projects\vstudio\x64\Release Library\pngunknown.exe
+       BscMake:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\bscmake.exe /nologo /o"G:\GitHub\Node-Image-Generator\png\png_library\libpng17\projects\vstudio\x64\Release Library\pngunknown.bsc" "x64\Release Library\pngunknown.sbr"
+       CustomBuildStep:
+         "G:\GitHub\Node-Image-Generator\png\png_library\libpng17\projects\vstudio\x64\Release Library\pngunknown.exe" --strict --default --touch "x64\Release Library\pngunknown.out" ../../../pngtest.png
+         :VCEnd
+         PASS: G:\GitHub\Node-Image-Generator\png\png_library\libpng17\projects\vstudio\x64\Release Library\pngunknown.exe discard
+         PASS: G:\GitHub\Node-Image-Generator\png\png_library\libpng17\projects\vstudio\x64\Release Library\pngunknown.exe save
+         PASS: G:\GitHub\Node-Image-Generator\png\png_library\libpng17\projects\vstudio\x64\Release Library\pngunknown.exe if-safe
+         PASS: G:\GitHub\Node-Image-Generator\png\png_library\libpng17\projects\vstudio\x64\Release Library\pngunknown.exe vpAg
+         PASS: G:\GitHub\Node-Image-Generator\png\png_library\libpng17\projects\vstudio\x64\Release Library\pngunknown.exe sTER
+         PASS: G:\GitHub\Node-Image-Generator\png\png_library\libpng17\projects\vstudio\x64\Release Library\pngunknown.exe IDAT
+         PASS: G:\GitHub\Node-Image-Generator\png\png_library\libpng17\projects\vstudio\x64\Release Library\pngunknown.exe sAPI
+     1>プロジェクト "G:\GitHub\Node-Image-Generator\png\png_library\libpng17\projects\vstudio\pngunknown\pngunknown.vcxproj" (Build ターゲット) のビルドが完了しました。
+
+ビルドに成功しました。
+
+経過時間 00:00:02.88

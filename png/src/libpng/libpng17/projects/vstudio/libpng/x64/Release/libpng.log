@@ -1,0 +1,50 @@
+﻿2015/01/01 0:39:37 にビルドを開始しました。
+     1>ノード 2 上のプロジェクト "G:\GitHub\Node-Image-Generator\png\png_library\libpng17\projects\vstudio\libpng\libpng.vcxproj" (Rebuild ターゲット)。
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\CL.exe /c /I..\..\..\..\zlib /Zi /nologo /W4 /WX /Ox /Oi /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _USRDLL /D _WINDLL /D _MBCS /GF /Gm- /EHsc /MD /GS /Gy /fp:precise /fp:except- /Zc:wchar_t- /Zc:forScope /Yc"pngpriv.h" /Fp"x64\Release\libpng17.pch" /Fo"x64\Release\\" /Fd"x64\Release\vc120.pdb" /FR"x64\Release\\" /Gd /TC /wd4996 /wd4127 /errorReport:prompt ..\..\..\png.c
+         png.c
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\CL.exe /c /I..\..\..\..\zlib /Zi /nologo /W4 /WX /Ox /Oi /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _USRDLL /D _WINDLL /D _MBCS /GF /Gm- /EHsc /MD /GS /Gy /fp:precise /fp:except- /Zc:wchar_t- /Zc:forScope /Yu"pngpriv.h" /Fp"x64\Release\libpng17.pch" /Fo"x64\Release\\" /Fd"x64\Release\vc120.pdb" /FR"x64\Release\\" /Gd /TC /wd4996 /wd4127 /errorReport:prompt ..\..\..\pngerror.c ..\..\..\pngget.c ..\..\..\pngmem.c ..\..\..\pngpread.c ..\..\..\pngread.c ..\..\..\pngrio.c ..\..\..\pngrtran.c ..\..\..\pngrutil.c ..\..\..\pngset.c ..\..\..\pngtrans.c ..\..\..\pngwio.c ..\..\..\pngwrite.c ..\..\..\pngwtran.c ..\..\..\pngwutil.c
+         pngerror.c
+         pngget.c
+         pngmem.c
+         pngpread.c
+         pngread.c
+         pngrio.c
+         pngrtran.c
+         pngrutil.c
+         pngset.c
+         pngtrans.c
+         pngwio.c
+         pngwrite.c
+         pngwtran.c
+         pngwutil.c
+       ResourceCompile:
+         C:\Program Files (x86)\Windows Kits\8.1\bin\x86\rc.exe /l"0x0409" /nologo /fo"x64\Release\pngwin.res" ..\..\..\scripts\pngwin.rc 
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"G:\GitHub\Node-Image-Generator\png\png_library\libpng17\projects\vstudio\x64\Release\libpng17.dll" /VERSION:"17" /INCREMENTAL:NO /NOLOGO /LIBPATH:"G:\GitHub\Node-Image-Generator\png\png_library\libpng17\projects\vstudio\x64\Release\\" zlib.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"G:\GitHub\Node-Image-Generator\png\png_library\libpng17\projects\vstudio\x64\Release\libpng17.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"G:\GitHub\Node-Image-Generator\png\png_library\libpng17\projects\vstudio\x64\Release\libpng17.lib" /MACHINE:X64 /DLL x64\Release\pngwin.res
+         x64\Release\png.obj
+         x64\Release\pngerror.obj
+         x64\Release\pngget.obj
+         x64\Release\pngmem.obj
+         x64\Release\pngpread.obj
+         x64\Release\pngread.obj
+         x64\Release\pngrio.obj
+         x64\Release\pngrtran.obj
+         x64\Release\pngrutil.obj
+         x64\Release\pngset.obj
+         x64\Release\pngtrans.obj
+         x64\Release\pngwio.obj
+         x64\Release\pngwrite.obj
+         x64\Release\pngwtran.obj
+         x64\Release\pngwutil.obj
+            ライブラリ G:\GitHub\Node-Image-Generator\png\png_library\libpng17\projects\vstudio\x64\Release\libpng17.lib とオブジェクト G:\GitHub\Node-Image-Generator\png\png_library\libpng17\projects\vstudio\x64\Release\libpng17.exp を作成中
+         コード生成しています。
+         コード生成が終了しました。
+         libpng.vcxproj -> G:\GitHub\Node-Image-Generator\png\png_library\libpng17\projects\vstudio\x64\Release\libpng17.dll
+       BscMake:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\bscmake.exe /nologo /o"G:\GitHub\Node-Image-Generator\png\png_library\libpng17\projects\vstudio\x64\Release\libpng17.bsc" x64\Release\png.sbr x64\Release\pngerror.sbr x64\Release\pngget.sbr x64\Release\pngmem.sbr x64\Release\pngpread.sbr x64\Release\pngread.sbr x64\Release\pngrio.sbr x64\Release\pngrtran.sbr x64\Release\pngrutil.sbr x64\Release\pngset.sbr x64\Release\pngtrans.sbr x64\Release\pngwio.sbr x64\Release\pngwrite.sbr x64\Release\pngwtran.sbr x64\Release\pngwutil.sbr
+     1>プロジェクト "G:\GitHub\Node-Image-Generator\png\png_library\libpng17\projects\vstudio\libpng\libpng.vcxproj" (Rebuild ターゲット) のビルドが完了しました。
+
+ビルドに成功しました。
+
+経過時間 00:00:02.42

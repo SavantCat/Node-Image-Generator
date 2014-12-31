@@ -1,0 +1,35 @@
+﻿2015/01/01 0:43:59 にビルドを開始しました。
+     1>ノード 2 上のプロジェクト "G:\GitHub\Node-Image-Generator\png\png_library\libpng17\projects\vstudio\zlib\zlib.vcxproj" (Rebuild ターゲット)。
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX /Ox /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _WINDOWS /D Z_SOLO /Gm- /EHsc /MD /GS- /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /FR"Release\\" /Gd /TC /analyze- /errorReport:prompt ..\..\..\..\zlib\adler32.c ..\..\..\..\zlib\compress.c ..\..\..\..\zlib\crc32.c ..\..\..\..\zlib\deflate.c ..\..\..\..\zlib\infback.c ..\..\..\..\zlib\inffast.c ..\..\..\..\zlib\inflate.c ..\..\..\..\zlib\inftrees.c ..\..\..\..\zlib\trees.c ..\..\..\..\zlib\uncompr.c ..\..\..\..\zlib\zutil.c
+         adler32.c
+         compress.c
+         crc32.c
+         deflate.c
+         infback.c
+         inffast.c
+         inflate.c
+         inftrees.c
+         trees.c
+         uncompr.c
+         zutil.c
+       Lib:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\Lib.exe /OUT:"G:\GitHub\Node-Image-Generator\png\png_library\libpng17\projects\vstudio\Release\zlib.lib" /NOLOGO /LTCG Release\adler32.obj
+         Release\compress.obj
+         Release\crc32.obj
+         Release\deflate.obj
+         Release\infback.obj
+         Release\inffast.obj
+         Release\inflate.obj
+         Release\inftrees.obj
+         Release\trees.obj
+         Release\uncompr.obj
+         Release\zutil.obj
+         zlib.vcxproj -> G:\GitHub\Node-Image-Generator\png\png_library\libpng17\projects\vstudio\Release\zlib.lib
+       BscMake:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\bscmake.exe /nologo /o"G:\GitHub\Node-Image-Generator\png\png_library\libpng17\projects\vstudio\Release\zlib.bsc" Release\adler32.sbr Release\compress.sbr Release\crc32.sbr Release\deflate.sbr Release\infback.sbr Release\inffast.sbr Release\inflate.sbr Release\inftrees.sbr Release\trees.sbr Release\uncompr.sbr Release\zutil.sbr
+     1>プロジェクト "G:\GitHub\Node-Image-Generator\png\png_library\libpng17\projects\vstudio\zlib\zlib.vcxproj" (Rebuild ターゲット) のビルドが完了しました。
+
+ビルドに成功しました。
+
+経過時間 00:00:00.72

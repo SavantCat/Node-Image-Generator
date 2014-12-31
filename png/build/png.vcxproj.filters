@@ -9,22 +9,24 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\png.cc">
-      <Filter>..</Filter>
-    </ClCompile>
     <None Include="..\binding.gyp">
       <Filter>..</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\MakePNG.h">
+    <ClInclude Include="..\src\common.h">
       <Filter>..</Filter>
     </ClInclude>
-    <ClInclude Include="..\encoder.h">
+    <ClInclude Include="..\src\encoder.h">
       <Filter>..</Filter>
     </ClInclude>
-    <ClInclude Include="..\common.h">
+    <ClInclude Include="..\src\MakePNG.h">
       <Filter>..</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\png.cc">
+      <Filter>..</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
