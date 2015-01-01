@@ -1,9 +1,0 @@
-﻿2015/01/01 0:26:41 にビルドを開始しました。
-     1>ノード 2 上のプロジェクト "G:\GitHub\Node-Image-Generator\png\png_library\libpng17\projects\vstudio\zlib\zlib.vcxproj" (Build ターゲット)。
-     1>Lib:
-         zlib.vcxproj -> G:\GitHub\Node-Image-Generator\png\png_library\libpng17\projects\vstudio\Release Library\zlib.lib
-     1>プロジェクト "G:\GitHub\Node-Image-Generator\png\png_library\libpng17\projects\vstudio\zlib\zlib.vcxproj" (Build ターゲット) のビルドが完了しました。
-
-ビルドに成功しました。
-
-経過時間 00:00:00.05
