@@ -56,7 +56,7 @@ bool PngMaker::png_free(){
 
 void PngMaker::write_png_gray(size_t w, size_t h, char *file_name, unsigned char **image)
 {
-	FILE            *fp;
+	FILE *fp;
 
 	init();
 
@@ -79,7 +79,7 @@ void PngMaker::write_png_gray(size_t w, size_t h, char *file_name, unsigned char
 
 void PngMaker::write_png_rgb(size_t w, size_t h, char *file_name, unsigned char **image)
 {
-	FILE            *fp;
+	FILE *fp;
 
 	init();
 

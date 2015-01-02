@@ -22,6 +22,7 @@
     <ProjectGuid>{2F539D87-62D4-FAD8-EFDE-CBE5A2094882}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>png</RootNamespace>
+    <ProjectName>NodeImageGenerator</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration">
@@ -112,7 +113,7 @@
       <OmitFramePointers>true</OmitFramePointers>
       <Optimization>Full</Optimization>
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;BUILDING_NODE_EXTENSION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <StringPooling>true</StringPooling>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -124,7 +125,7 @@
       <AdditionalOptions>/LTCG %(AdditionalOptions)</AdditionalOptions>
     </Lib>
     <Link>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;DelayImp.lib;"C:\Users\K.Hotta\.node-gyp\0.10.28\$(Configuration)\node.lib";"../src/lib/x64/libpng16.lib";"../src/lib/x64/zlib.lib"</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;DelayImp.lib;"C:\Users\K.Hotta\.node-gyp\0.10.28\$(Configuration)\node.lib";"../src/lib/x64/libpng16.lib";"../src/lib/x64/zlib.lib";"../src/lib/x64/jpeg.lib"</AdditionalDependencies>
       <AllowIsolation>true</AllowIsolation>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -137,6 +138,7 @@
       <TargetExt>.node</TargetExt>
       <TargetMachine>MachineX64</TargetMachine>
       <AdditionalLibraryDirectories>.\Release</AdditionalLibraryDirectories>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
     <ResourceCompile>
       <AdditionalIncludeDirectories>C:\Users\K.Hotta\.node-gyp\0.10.28\src;C:\Users\K.Hotta\.node-gyp\0.10.28\deps\uv\include;C:\Users\K.Hotta\.node-gyp\0.10.28\deps\v8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -155,7 +157,7 @@
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;BUILDING_NODE_EXTENSION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>false</ExceptionHandling>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
@@ -164,7 +166,7 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OutputFile>$(OutDir)$(ProjectName).node</OutputFile>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;DelayImp.lib;"C:\Users\K.Hotta\.node-gyp\0.10.28\ia32\node.lib";"../src/lib/x86/libpng16.lib";"../src/lib/x86/zlib.lib"</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;DelayImp.lib;"C:\Users\K.Hotta\.node-gyp\0.10.28\ia32\node.lib";"../src/lib/x86/libpng16.lib";"../src/lib/x86/zlib.lib";"../src/lib/x86/jpeg.lib"</AdditionalDependencies>
       <AdditionalLibraryDirectories>.\Release</AdditionalLibraryDirectories>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <EnableUAC>true</EnableUAC>
@@ -174,12 +176,11 @@
     <None Include="..\binding.gyp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\png.cc" />
+    <ClCompile Include="..\src\main.cc" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\common.h" />
-    <ClInclude Include="..\src\encoder.h" />
-    <ClInclude Include="..\src\MakePNG.h" />
+    <ClInclude Include="..\src\include\jpegEncoder.h" />
+    <ClInclude Include="..\src\PngEncoder.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

@@ -3,10 +3,10 @@ var fs = require('fs');
 
 switch (os.arch()) {
     case 'x64':
-        var ImageGenerator = require('./build/Release/x64/png');
+        var ImageGenerator = require('./build/Release/x64/NodeImageGenerator');
         break;
     case 'ia32':
-        var ImageGenerator = require('./build/Release/Win32/png');
+        var ImageGenerator = require('./build/Release/Win32/NodeImageGenerator');
         break;
 }
 
@@ -53,14 +53,31 @@ var inti = {
             if (arguments.length == 4 && (typeof(arguments[2]) == 'string')) {
                 var buf = this.ToBuffer(arguments[0],arguments[1],arguments[3]);
                 if (buf != false) {
-                    fs.writeFile(arguments[2], buf , function (err) {
-                        console.log('complete!');
-                    }); 
+                    var write_stream = fs.createWriteStream('./'+arguments[2]);
+                    write_stream.write(buf);
+                    write_stream.end();
                 }
             }else{
                 console.log('Error:argument');
             }
             return 0;
+        }
+    },
+    jpg:{
+        ToFile:function(args){
+            var w   = arguments[0];
+            var h   = arguments[1];
+            var i_c = arguments[2];
+            var q   = arguments[3];
+            var name= arguments[4];
+            var data= arguments[5];
+            
+            var buf = ImageGenerator.write_jpag_to_memory(w,h,i_c,q,data);
+            //console.log(buf);
+            
+            var write_stream = fs.createWriteStream('./'+name);
+            write_stream.write(buf);
+            write_stream.end();
         }
     }
 }

@@ -1,7 +1,7 @@
 {
 	'targets': [
 		{
-			'target_name' : 'png',
+			'target_name' : 'NodeImageGenerator',
 			'sources' : [ 
 				'./src/png.cc',
 				'./src/MakePNG.h',
