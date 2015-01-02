@@ -17,7 +17,7 @@
     <ClInclude Include="..\src\PngEncoder.h">
       <Filter>..</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\include\jpegEncoder.h">
+    <ClInclude Include="..\src\jpegEncoder.h">
       <Filter>..</Filter>
     </ClInclude>
   </ItemGroup>

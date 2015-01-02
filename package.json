@@ -1,5 +1,5 @@
 {
-  "name": "node-ImageGenerator",
+  "name": "Node-ImageGenerator",
   "version": "1.0.0",
   "description": "Makeing Png format buffer.",
   "main": "index.js",

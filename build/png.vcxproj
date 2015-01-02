@@ -179,7 +179,7 @@
     <ClCompile Include="..\src\main.cc" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\include\jpegEncoder.h" />
+    <ClInclude Include="..\src\jpegEncoder.h" />
     <ClInclude Include="..\src\PngEncoder.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
