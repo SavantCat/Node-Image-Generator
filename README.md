@@ -91,5 +91,6 @@ node-image-to-buffer
 ライセンス
 ------
 Copyright &copy; 2015 Katsuyoshi Hotta  
+Licensed under the [MIT license][MIT]
 [MIT]: http://www.opensource.org/licenses/mit-license.php
 
