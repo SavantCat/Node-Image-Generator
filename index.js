@@ -33,7 +33,6 @@ var inti = {
                                 var g = arguments[3];
                                 var b = arguments[4];
                                 
-                                
                                 var data = new Buffer(w*h*3);
                                 data.fill(0);
                                 
@@ -67,10 +66,10 @@ var inti = {
         ToFile:function(args){
             var w   = arguments[0];
             var h   = arguments[1];
-            var i_c = arguments[2];
-            var q   = arguments[3];
-            var name= arguments[4];
-            var data= arguments[5];
+            var i_c = 3
+            var q   = arguments[2];
+            var name= arguments[3];
+            var data= arguments[4];
             
             var buf = ImageGenerator.write_jpag_to_memory(w,h,i_c,q,data);
             //console.log(buf);
@@ -78,6 +77,9 @@ var inti = {
             var write_stream = fs.createWriteStream('./'+name);
             write_stream.write(buf);
             write_stream.end();
+        },
+        ToBuffer:function(w,h,q,data){
+            return  ImageGenerator.write_jpag_to_memory(w,h,q,data);
         }
     }
 }

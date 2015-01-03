@@ -15,6 +15,11 @@ for(var i=0,t=0;i<h;i++){
 png.ToFile(w,h,'gradation.png',data);
 jpg.ToFile(w,h,3,50,'gradation.jpg',data);
 
+var buf = png.Tobuffer(w,h,data);
+console.log(buf);
+var buf = jpg.Tobuffer(w,h,3,50,data);
+console.log(buf);
+
 var w = 2000;
 var h = 2000;
 var data = new Buffer(w*h*3);
@@ -34,3 +39,4 @@ fs.readFile('./data.txt', function (err, data) {
     png.ToFile(500,500,'Vnc.png',data);
     jpg.ToFile(500,500,3,50,'Vnc.jpg',data);
 });
+
