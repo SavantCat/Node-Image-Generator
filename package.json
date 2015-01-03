@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/SavantCat/Node-Image-Generator.git"
+    "url": "https://github.com/SavantCat/node-image-to-buffer.git"
   },
   "keywords": [
     "png",
@@ -18,7 +18,7 @@
   "author": "Katsuyoshi Hotta",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/SavantCat/Node-Image-Generator/issues"
+    "url": "https://github.com/SavantCat/node-image-to-buffer/issues"
   },
-  "homepage": "https://github.com/SavantCat/Node-Image-Generator"
+  "homepage": "https://github.com/SavantCat/node-image-to-buffer"
 }
