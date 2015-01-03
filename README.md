@@ -2,7 +2,12 @@ node-image-to-buffer
 ====================
 
 ピクセルデータから任意のフォーマット（png,jpeg,gif,etc）のバッファに変換するにnode.js用モジュール  
-動作確認環境 = {Node.js:v0.10.28,arch:[x64,x86]}
+動作確認環境 = {Node.js:v0.10.28,arch:[x64,x86],OS:[Windows7,64bit]}
+
+ビルド
+------
+VC2013  
+./build/binding.sln　からビルドする
 
 使い方
 ------
@@ -85,12 +90,12 @@ node-image-to-buffer
 予定
 ------
 *   拡大、縮小など機能を増やす
-*   libjpeg-turbなど他のライブラリも追加
+*   libjpeg-turboなど他のライブラリも追加
 *   例外処理など追加
 
 ライセンス
 ------
-Copyright &copy; 2015 Katsuyoshi Hotta  
+Copyright &copy; 2015 Katsuyoshi Hotta [@Savant_Cat](https://twitter.com/Savant_Cat)  
 Licensed under the [MIT license][MIT]
 [MIT]: http://www.opensource.org/licenses/mit-license.php
 
