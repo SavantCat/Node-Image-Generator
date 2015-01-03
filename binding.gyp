@@ -1,7 +1,7 @@
 {
 	'targets': [
 		{
-			'target_name' : 'NodeImageGenerator',
+			'target_name' : 'NodeImageToBuffer',
 			'sources' : [ 
 				'./src/main.cc',
 				'./src/PngEncoder.h',
