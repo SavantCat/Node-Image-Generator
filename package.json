@@ -1,5 +1,5 @@
 {
-  "name": "Node-Image-Generator",
+  "name": "node-image-to-buffer",
   "version": "1.0.0",
   "description": "Make buffer from png and jpeg format.",
   "main": "index.js",
