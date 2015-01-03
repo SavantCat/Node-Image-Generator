@@ -1,19 +1,22 @@
 {
-  "name": "Node-ImageGenerator",
+  "name": "Node-Image-Generator",
   "version": "1.0.0",
-  "description": "Makeing Png format buffer.",
+  "description": "Make buffer from png and jpeg format.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "install": "node-gyp rebuild"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/SavantCat/Node-Image-Generator.git"
   },
+  "keywords": [
+    "png",
+    "jpeg",
+    "jpg"
+  ],
   "author": "Katsuyoshi Hotta",
   "license": "MIT",
-  "gypfile": true,
   "bugs": {
     "url": "https://github.com/SavantCat/Node-Image-Generator/issues"
   },

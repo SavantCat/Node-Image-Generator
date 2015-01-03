@@ -3,10 +3,14 @@
 		{
 			'target_name' : 'NodeImageGenerator',
 			'sources' : [ 
-				'./src/png.cc',
-				'./src/MakePNG.h',
-				'./src/encoder.h',
-				'./src/common.h',
+				'./src/main.cc',
+				'./src/PngEncoder.h',
+				'./src/jpegEncoder.h',
+			],
+			'Libraries' : [
+				'-l<./src/lib/x86/libpng16.lib>',
+				'-l<./src/lib/x86/zlib.lib>',
+				'-l<./src/lib/x86/jpeg.lib>',				
 			],
 		},
 	],

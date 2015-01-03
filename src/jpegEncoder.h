@@ -33,10 +33,10 @@ jpegEncoder::~jpegEncoder(){
 void jpegEncoder::SetOption(int w, int h, int i_c, int q){
 	cinfo.err = jpeg_std_error(&jerr);
 	jpeg_create_compress(&cinfo);
-	jpg = NULL;
+	jpg = (unsigned char*)malloc(sizeof(unsigned char)*w*h * 3);
 	buf_len = sizeof(unsigned char)*w*h*3;
 	jpeg_mem_dest(&cinfo, &jpg, &buf_len);
-	cinfo.image_width = w;
+	cinfo.image_width  = w;
 	cinfo.image_height = h;
 	switch (i_c){
 	case 3:
